@@ -7,7 +7,7 @@ from matplotlib import dates as dates
 import numpy as np
 
 
-df=pd.read_csv(r"C:\Users\masay\OneDrive\デスクトップ\卒業論文\事務所別月別ゴミ収集量.csv",encoding="Shift_JIS")
+df=pd.read_csv(r"C:\Users\masay\OneDrive\デスクトップ\卒業論文\エクセルcsv\事務所別月別ゴミ収集量.csv",encoding="Shift_JIS")
 df=df.dropna(axis=1)
 df.columns=["date","data"]
 df["date"]=pd.to_datetime(df["date"]).dt.strftime("%Y-%m")
@@ -32,27 +32,36 @@ ar_model=AutoReg(train_y,10)
 results=ar_model.fit()
 df["ar_pred"]=results.predict(start=0,end=60)
 #データフレームに追加.predictは配列を返す
-
-for i in range(11):
+"""for i in range(11):
     ar_model=AutoReg(train_y,i)
     results=ar_model.fit()
+    df["ar_pred"]=results.predict(start=0,end=60)
     print(f"lags={i}:aic={results.aic}")
-    
-"""aic_lis=[]
-for i in range(10):
-    for j in range(3):
-        sarima_model=sm.tsa.SARIMAX(train_y,order=(i,0,0),seasonal_order=(j,0,0,12))
+    print(f"{root_mean_squared_error(df['data'],df['ar_pred'],48)}")
+
+
+aic_lis=[]
+aic_error_lis=[]
+for i in range(11):
+    for j in range(4):
+        sarima_model=sm.tsa.SARIMAX(train_y,order=(i,0,0),seasonal_order=(j,0,0,12),enforce_stationarity=True)
+        """"""enforsce_stationarityはモデルを作るとき定常状態を保ったまま作るということ。定常状態は一つ式が増えるので
+        縛りが増えることになる。""""""
         try:
             sarima_results=sarima_model.fit()
-            aic_lis.append([i,j,sarima_results.aic])
+            df["arima_pred"]=sarima_results.predict(start=0,end=60)
             print(f"lags={i},{j}:aic={sarima_results.aic}")
+            aic_lis.append([i,j,sarima_results.aic,root_mean_squared_error(df['data'],df['arima_pred'],48)])
         except:
+            aic_error_lis.append([i,j])
             print("UnexceptedError")
+
 
 aic_lis=sorted(aic_lis,reverse=False,key=lambda x:x[2])
 print(aic_lis)
+print("------------------------")
+print(aic_error_lis)
 """
-
 
 
 fig = plt.figure(figsize=(16,9))
@@ -64,8 +73,9 @@ fig=results.plot_diagnostics(fig=fig, lags=37)
 
 
 
-sarima_model=sm.tsa.SARIMAX(train_y,order=(1,0,0),seasonal_order=(1,0,0,12))
+sarima_model=sm.tsa.SARIMAX(train_y,order=(7,0,0),seasonal_order=(1,0,0,12),enforce_stationarity=True)
 sarima_results=sarima_model.fit()
+print(sarima_results.aic)
 df["arima_pred"]=sarima_results.predict(start=0,end=60)
 #データフレームに追加.predictは配列を返す
 
@@ -75,6 +85,7 @@ sarima_fig = plt.figure(figsize=(16,9))
 sarima_fig=sarima_results.plot_diagnostics(fig=sarima_fig,lags=37)
 #sarimaモデルの実装、グラフの描写
 #sarima_fig.savefig("sarima.png")
+
 
 
 #↓ホワイトノイズの自己相関を表示する
