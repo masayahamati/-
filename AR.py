@@ -63,6 +63,8 @@ print("------------------------")
 print(aic_error_lis)
 """
 
+"エラーでも処理を勧めてくれる機能。try exceptはfor文でエラーが出るときなどに有効"
+
 
 fig = plt.figure(figsize=(16,9))
 fig=results.plot_diagnostics(fig=fig, lags=37)
