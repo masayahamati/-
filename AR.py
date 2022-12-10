@@ -140,3 +140,5 @@ print(f"RMSEは{root_mean_squared_error(df['data'],df['arima_pred'],48)}")
 
 
 plt.show()
+
+

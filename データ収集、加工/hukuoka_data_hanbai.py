@@ -23,7 +23,9 @@ for file_lis in file_lists:
             df_kasi=pd.concat([df_kasi,df.iloc[[i],:]],axis=0)
     #ilocにするときデータフレームとしてとりだしたいので[i]で指定する。
 
-
+print(df_kakou)
+print(df_kasi)
+print(df_seisen)
 
 """
 for i in range(len(df)):
@@ -36,9 +38,9 @@ for i in range(len(df)):
 #ilocにするときデータフレームとしてとりだしたいので[i]で指定する。
 """
 
-
-
-
+df_kakou.to_csv(r"C:\Users\masay\OneDrive\デスクトップ\卒業論文\エクセルcsv\マーチェンダイズ福岡の加工データ\kakou.csv",encoding="SHIFT-JIS")
+df_seisen.to_csv(r"C:\Users\masay\OneDrive\デスクトップ\卒業論文\エクセルcsv\マーチェンダイズ福岡の加工データ\seisen.csv",encoding="SHIFT-JIS")
+df_kasi.to_csv(r"C:\Users\masay\OneDrive\デスクトップ\卒業論文\エクセルcsv\マーチェンダイズ福岡の加工データ\kasi.csv",encoding="SHIFT-JIS")
 
 
 

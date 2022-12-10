@@ -68,10 +68,5 @@ print("------------------------")
 print(aic_error_lis)
 '''
 
-ax2.plot(sarima_results.predict(),"black")
-
-
-plt.show()
-
 
 
